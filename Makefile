@@ -10,12 +10,14 @@ LIBPATH			:=
 
 INCDIRS 		:= .    \
                     kernel \
-					drivers
+					drivers \
+					mm
 				   			   
 SRCDIRS			:= .    \
                     arm \
                     kernel \
-					drivers        
+					drivers \
+					mm
 				   
 INCLUDE			:= $(patsubst %, -I %, $(INCDIRS))
 
