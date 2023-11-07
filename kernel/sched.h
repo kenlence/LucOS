@@ -2,21 +2,42 @@
 #define __SCHED_H_
 
 #define THREAD_SIZE (8 * 1024)
+#define THREAD_START_SP (THREAD_SIZE - 8)
 
-struct runtime {
-
+struct task {
+	/* -1 unrunnable, 0 runnable, >0 stopped */
+	volatile long state;
+	unsigned int pid;
+	void *stack;
+	//struct list_head tasks;
 };
 
-struct thread {
+struct cpu_context_save {
+	unsigned long r4;
+	unsigned long r5;
+	unsigned long r6;
+	unsigned long r7;
+	unsigned long r8;
+	unsigned long r9;
+	unsigned long sl;
+	unsigned long fp;
+	unsigned long sp;
+	unsigned long pc;
+	unsigned long extra[2];		/* Xscale 'acc' register, etc */
+};
 
+struct thread_info {
+	struct task *task;
+	struct cpu_context_save	cpu_context;	/* cpu context */
 };
 
 /* 为一个线程申请的内存是THREAD_SIZE，在低地址放置了一个描述线程的结构体
  * 结构体以上的地址为栈，这个THREAD_SIZE的最高地址就设置为栈指针
  * 栈的大小等于 THRAD_SIZE - sizeof(struct thread)
+ * 这个联合体用起来必须是8K对齐的，不然无法通过栈指针找到thread_info
  */
 union thread_union {
-	struct thread thrad;
+	struct thread_info thread_info;
 	unsigned long stack[THREAD_SIZE/sizeof(long)];
 };
 

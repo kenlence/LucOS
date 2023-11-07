@@ -1,3 +1,5 @@
+#define THREAD_START_SP (8192 - 8)
+
 .global _start  				/* 全局标号 */
 
 /*
@@ -54,11 +56,17 @@ Reset_Handler:
 	bic r0, r0, #0x1f 	/* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4 	*/
 	orr r0, r0, #0x13 	/* r0或上0x13,表示使用SVC模式					*/
 	msr cpsr, r0		/* 将r0 的数据写入到cpsr_c中 					*/
-	ldr sp, =0X80200000	/* 设置SVC模式下的栈首地址为0X80200000,大小为2MB */
-
+	adr r3, __sp_data
+	ldmia r3, {sp}
+	//ldr sp, = init_thread_union + THREAD_START_SP
 	cpsie i				/* 打开全局中断 */
+	b entry
 
-	b entry				/* 跳转到main函数 			 	*/
+	.align	2
+	.type	__sp_data, %object
+__sp_data:
+	.long	init_thread_union + THREAD_START_SP @ sp
+	.size	__sp_data, . - __sp_data
 
 /* 未定义中断 */
 Undefined_Handler:
