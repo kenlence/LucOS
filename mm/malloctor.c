@@ -29,4 +29,9 @@ void kfree(const void *block) {
     return ;
 }
 
+void *__get_free_pages(unsigned int order) {
+    //alian for page
+    free_ptr = (void*)((unsigned int)free_ptr && 0xfffff000 + PAGE_SIZE);
+    return kmalloc(PAGE_SIZE * (1 << order));
+}
 

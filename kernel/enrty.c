@@ -31,6 +31,8 @@ int entry()
     board_init();
     kernel_init();
 
+    printk("kernel started\n");
+
     test_app();
     //__asm("MRC p15, 4, r1, c15, c0, 0");
     return 0;

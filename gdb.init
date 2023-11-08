@@ -1,5 +1,7 @@
 tar rem localhost:1234
 file lucos.elf
 dir .
+
+
 b entry
 c
