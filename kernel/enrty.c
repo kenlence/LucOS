@@ -5,6 +5,7 @@
 #include "clk.h"
 #include "imx6ul.h"
 #include "../mm/malloctor.h"
+#include "sched.h"
 
 static void board_init(void) {
 	int_init(); 				/* 初始化中断(一定要最先调用！) */
@@ -22,16 +23,27 @@ static void kernel_init(void) {
 }
 
 static void test_app(void) {
-    char *str = "Hello world\n";
-    printk("%s\n", str);
+    for (;;) {
+        printk("test_app\n");
+        schedule();
+    }
 }
+
+static struct task* test;
 
 int entry()
 {
     board_init();
     kernel_init();
 
-    test_app();
+    printk("kernel started\n");
+
+    test = create_task(test_app);
+
+    for (;;) {
+        printk("idle thread\n");
+        schedule();
+    }
     //__asm("MRC p15, 4, r1, c15, c0, 0");
     return 0;
 }
