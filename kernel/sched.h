@@ -59,7 +59,7 @@ struct task *create_task(task_func func);
 
 void schedule(void);
 
-#define current get_current_task();
+#define current get_current_task()
 
 struct task *get_current_task(void);
 

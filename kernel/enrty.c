@@ -23,9 +23,13 @@ static void kernel_init(void) {
 }
 
 static void test_app(void) {
-    char *str = "test_app\n";
-    printk("%s\n", str);
+    for (;;) {
+        printk("test_app\n");
+        schedule();
+    }
 }
+
+static struct task* test;
 
 int entry()
 {
@@ -34,9 +38,10 @@ int entry()
 
     printk("kernel started\n");
 
-    struct task *tsk1 = create_task(test_app);
+    test = create_task(test_app);
 
     for (;;) {
+        printk("idle thread\n");
         schedule();
     }
     //__asm("MRC p15, 4, r1, c15, c0, 0");

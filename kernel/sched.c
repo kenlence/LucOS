@@ -63,6 +63,10 @@ struct task *create_task(task_func func) {
 
 static inline struct task *pick_next_task(struct task *prev)
 {
+    if (current != &init_task) {
+        return &init_task;
+    }
+
     for (int i = 0; i < MAX_TASK_NUM; i++) {
         if (task_list[i] == NULL) 
             continue;
@@ -86,7 +90,6 @@ static void context_switch(struct task *prev, struct task *next)
 {
 	/* Here we just switch the register state and the stack. */
 	switch_to(prev, next, prev);
-    __asm__ __volatile__("mov r0, r0");   //nop
     __asm__ __volatile__("":::"memory");
 }
 
