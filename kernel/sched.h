@@ -13,7 +13,7 @@ enum task_state {
 	TASK_STOPPED = 1,
 };
 
-typedef void(*task_func)(void)
+typedef void(*task_func)(void);
 
 struct task {
 	/* -1 unrunnable, 0 runnable, >0 stopped */
@@ -37,6 +37,9 @@ struct cpu_context_save {
 	unsigned long extra[2];		/* Xscale 'acc' register, etc */
 };
 
+/* 由于没有实现类似linux的自动生成宏定义，因为如果修改了这个结构体
+ * 就需要对应修改switch_to，主要是cpu_context在这个结构体中的偏移
+ */
 struct thread_info {
 	struct task *task;
 	struct cpu_context_save	cpu_context;	/* cpu context */

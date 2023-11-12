@@ -1,5 +1,6 @@
 #include "sched.h"
 #include "../mm/malloctor.h"
+#include "../include/stddef.h"
 
 #define MAX_TASK_NUM 64
 
@@ -17,10 +18,10 @@ struct task init_task = {
     .pid = 0,
 };
 
-static task *current_task = &init_task;
+static struct task *current_task = &init_task;
 
 /*创建的task*/
-static struct task_list* [MAX_TASK_NUM];
+static struct task *task_list[MAX_TASK_NUM];
 static unsigned int free_pid = 0;
 
 struct task *get_current_task(void) {
@@ -38,7 +39,7 @@ static unsigned int alloc_pid(void) {
 
 static unsigned int register_task(struct task *tsk) {
     int pid = alloc_pid();
-    if (pif < 0) {
+    if (pid < 0) {
         return pid;
     }
 
@@ -50,13 +51,14 @@ struct task *create_task(task_func func) {
     struct task *tsk = (struct task *)kmalloc(sizeof(struct task));
     union thread_union *thread= __get_free_pages(1); //get 2^1 pages
 
-    tsk->stack = thread_info;
+    tsk->stack = thread;
     tsk->state = 0; //runnable
     thread->thread_info.task = tsk;
     thread->thread_info.cpu_context.pc = (unsigned long)func;
-    thread->thread_info.cpu_context.sp = thread->statck + THREAD_START_SP;
+    thread->thread_info.cpu_context.sp = (unsigned long)(thread->stack + THREAD_START_SP);
 
     tsk->pid = register_task(tsk);
+    return tsk;
 }
 
 static inline struct task *pick_next_task(struct task *prev)
@@ -84,14 +86,14 @@ static void context_switch(struct task *prev, struct task *next)
 {
 	/* Here we just switch the register state and the stack. */
 	switch_to(prev, next, prev);
-    __memory_barrier();
+    __asm__ __volatile__("mov r0, r0");   //nop
+    __asm__ __volatile__("":::"memory");
 }
 
 
 static void __schedule(void)
 {
 	struct task *prev, *next;
-	unsigned long *switch_count;
 
 	//preempt_disable();  禁用抢占
 	prev = current;
@@ -100,10 +102,10 @@ static void __schedule(void)
     //就要把线程移除running队列，放入其他队列
     //如果是线程抢占了，那么保持再running即可，什么都不用做直接往下
 
-	next = pick_next_task(rq, prev);
+	next = pick_next_task(prev);
 
 	if (prev != next) {
-		current = next;
+		current_task = next;
 		context_switch(prev, next);
 	}
 
@@ -114,7 +116,7 @@ void schedule(void)
 {
     do {
 	    __schedule();
-    } while(0) 
+    } while(0);
     //should check need resched here, while(need_resched())
 }
 
