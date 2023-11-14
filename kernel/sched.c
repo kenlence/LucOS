@@ -1,6 +1,7 @@
 #include "sched.h"
 #include "../mm/malloctor.h"
 #include "../include/stddef.h"
+#include "../include/list.h"
 
 #define MAX_TASK_NUM 64
 
