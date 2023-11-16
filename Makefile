@@ -6,19 +6,19 @@ LD				:= $(CROSS_COMPILE)ld
 OBJCOPY 		:= $(CROSS_COMPILE)objcopy
 OBJDUMP 		:= $(CROSS_COMPILE)objdump
 
-LIBPATH			:= 
+LIBPATH			:=
 
 INCDIRS 		:= .    \
                     kernel \
 					drivers \
-					mm
-				   			   
+					apps
+
 SRCDIRS			:= .    \
                     arm \
                     kernel \
 					drivers \
-					mm
-				   
+					apps
+
 INCLUDE			:= $(patsubst %, -I %, $(INCDIRS))
 
 SFILES			:= $(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.S))
@@ -34,16 +34,16 @@ OBJS			:= $(SOBJS) $(COBJS)
 VPATH			:= $(SRCDIRS)
 
 .PHONY: clean
-	
+
 $(TARGET).elf : $(OBJS)
 	$(LD) -Tlucos.lds -o $(TARGET).elf $^
 
 $(SOBJS) : obj/%.o : %.S
-	$(CC) -Wall -nostdlib -fno-builtin -c -g -std=c99 -O0 $(INCLUDE) -o $@ $<
+	$(CC) -Wall -nostdlib -fno-builtin -c -g -std=gnu99 -O0 $(INCLUDE) -o $@ $<
 
 $(COBJS) : obj/%.o : %.c
-	$(CC) -Wall -nostdlib -fno-builtin -c -g -std=c99 -O0 $(INCLUDE) -o $@ $<
-	
+	$(CC) -Wall -nostdlib -fno-builtin -c -g -std=gnu99 -O0 $(INCLUDE) -o $@ $<
+
 qemu: $(TARGET).elf
 	qemu-system-arm -M mcimx6ul-evk -m 1024M  -kernel lucos.elf -serial mon:stdio
 
@@ -53,4 +53,4 @@ qemu-gdb: $(TARGET).elf
 clean:
 	rm -rf $(TARGET).elf $(TARGET).dis $(TARGET).bin $(COBJS) $(SOBJS)
 
-	
+
