@@ -4,6 +4,7 @@
 #include "stddef.h"
 #include "types.h"
 #include "poison.h"
+#include "kernel.h"
 
 /*
  * Simple doubly linked list implementation.

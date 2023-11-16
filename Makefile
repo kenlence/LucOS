@@ -39,10 +39,10 @@ $(TARGET).elf : $(OBJS)
 	$(LD) -Tlucos.lds -o $(TARGET).elf $^
 
 $(SOBJS) : obj/%.o : %.S
-	$(CC) -Wall -nostdlib -fno-builtin -c -g -std=c99 -O0 $(INCLUDE) -o $@ $<
+	$(CC) -Wall -nostdlib -fno-builtin -c -g -std=gnu99 -O0 $(INCLUDE) -o $@ $<
 
 $(COBJS) : obj/%.o : %.c
-	$(CC) -Wall -nostdlib -fno-builtin -c -g -std=c99 -O0 $(INCLUDE) -o $@ $<
+	$(CC) -Wall -nostdlib -fno-builtin -c -g -std=gnu99 -O0 $(INCLUDE) -o $@ $<
 
 qemu: $(TARGET).elf
 	qemu-system-arm -M mcimx6ul-evk -m 1024M  -kernel lucos.elf -serial mon:stdio

@@ -7,9 +7,14 @@
 //如果没有任何可运行的任务，则切换到init_task
 static inline struct task_struct *pick_next_task(struct task_struct *prev)
 {
+	struct task_struct *tsk;
+	list_for_each_entry(tsk, &init_task.running_tasks, running_tasks) {
+		if (tsk != current) {
+			break;
+		}
+	}
 
-
-    return (struct task_struct*)0;
+    return tsk;
 }
 
 extern struct task_struct *__switch_to(struct task_struct *, struct thread_info *, struct thread_info *);

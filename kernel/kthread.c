@@ -4,18 +4,21 @@
 #include "../include/gfp.h"
 #include "../include/list.h"
 #include "../include/sched.h"
+#include "../include/current.h"
 
-//TODO:在这里，把任务放到tasks链表里
-static int kthread(int(*threadfn)(void*), void *data)
+typedef int(*func)(void*);
+
+//通过r4和r5给kthread传参
+register unsigned long r4 __asm__ ("r4");
+register unsigned long r5 __asm__ ("r5");
+
+//给函数套个衣服，不然裸跑的话，出问题影响整个系统
+static void kthread(void)
 {
-	/* Copy data: it's on kthread's stack */
-	struct kthread_create_info *create = _create;
-	int (*threadfn)(void *data) = create->threadfn;
-	void *data = create->data;
-	int ret;
+    int(*threadfn)(void*) = (func)r4;
+    void *data = (void*)r5;
 
-    /* 如果又调度回来了，说明被唤醒了 */
-	ret = threadfn(data);
+	threadfn(data);
     /* 执行完线程函数，线程就死了 */
     __set_current_state(TASK_DEAD);
     /* 这个线程死了就换别的线程来工作 */
@@ -40,7 +43,11 @@ struct task_struct *kthread_create_on_node(int (*threadfn)(void *data),
 
     thread->thread_info.task = tsk;
     thread->thread_info.cpu_context.pc = (unsigned long)kthread;
-    thread->thread_info.cpu_context.sp = (unsigned long)(thread->stack + THREAD_START_SP);
+    thread->thread_info.cpu_context.r4 = (unsigned long)threadfn;
+    thread->thread_info.cpu_context.r5 = (unsigned long)data;
+    thread->thread_info.cpu_context.sp = (unsigned long)(thread) + THREAD_START_SP;
 
+    //把新创建的线程放进链表里
+    list_add(&tsk->tasks, &current->tasks);
 	return tsk;
 }

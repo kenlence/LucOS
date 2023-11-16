@@ -7,6 +7,7 @@
 #include "clk.h"
 #include "imx6ul.h"
 #include "../include/kthread.h"
+#include "../include/current.h"
 
 static void board_init(void) {
 	int_init(); 				/* 初始化中断(一定要最先调用！) */
@@ -32,7 +33,8 @@ int entry()
 
     printk("kernel started\n");
 
-    kthread_run(user_default_task, 0, "user_default_task");
+    struct task_struct *user_default =
+        kthread_run(user_default_task, 0, "user_default_task");
 
     for (;;) {
         printk("idle thread\n");

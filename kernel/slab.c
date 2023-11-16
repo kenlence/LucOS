@@ -38,8 +38,8 @@ void *__get_free_pages(unsigned int order)
     //free_ptr = (void*)(((unsigned int)free_ptr & 0xfffff000) + PAGE_SIZE);
     unsigned int tmp;
     tmp = (unsigned int) free_ptr;
-    tmp &= 0xfffff000;
-    tmp += PAGE_SIZE;
+    tmp &= ~((PAGE_SIZE << order) - 1);
+    tmp += PAGE_SIZE << order;
     free_ptr = (void *)tmp;
     return kmalloc(PAGE_SIZE * (1 << order));
 }

@@ -18,6 +18,7 @@ struct task_struct {
 	volatile long state;
 	void *stack;
 	struct list_head tasks;
+	struct list_head running_tasks;
 	char comm[TASK_COMM_LEN]; //线程的名字
 };
 

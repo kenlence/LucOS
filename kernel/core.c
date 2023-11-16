@@ -1,12 +1,16 @@
 #include "../include/sched.h"
+#include "../include/list.h"
+#include "../include/current.h"
 
-static int
-try_to_wake_up(struct task_struct *p)
-{
-	return 1;
-}
+extern struct list_head running_tasks;
 
 int wake_up_process(struct task_struct *tsk)
 {
-    return try_to_wake_up(tsk);
+    if (tsk->state == TASK_RUNNING) {
+        return -1;
+    }
+
+    tsk->state = TASK_RUNNING;
+    list_add(&tsk->running_tasks, &current->running_tasks);
+    return 0;
 }

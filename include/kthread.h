@@ -3,6 +3,8 @@
 
 #include "sched.h"
 
+extern struct list_head running_tasks;
+
 struct task_struct *kthread_create_on_node(int (*threadfn)(void *data),
 					   void *data,
 					   int node,
