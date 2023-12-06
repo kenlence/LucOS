@@ -1,6 +1,8 @@
 #ifndef __ASM_ARM_IRQFLAGS_H
 #define __ASM_ARM_IRQFLAGS_H
 
+#include "ptrace.h"
+
 #define IRQMASK_REG_NAME_R "cpsr"
 #define IRQMASK_REG_NAME_W "cpsr_c"
 #define IRQMASK_I_BIT	PSR_I_BIT

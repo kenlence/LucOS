@@ -20,7 +20,7 @@ static void kernel_init(void) {
     mem_pool_init();
 
 /* 1ms, timer is used for scheduler, so start when scheduler start*/
-    //epit1_init(0, 66000);
+    //epit1_init(0, 66000 * 200);
     return;
 }
 
@@ -35,9 +35,9 @@ int entry()
 
     struct task_struct *user_default =
         kthread_run(user_default_task, 0, "user_default_task");
+    (void)user_default;
 
     for (;;) {
-        printk("idle thread\n");
         schedule();
     }
     return 0;
