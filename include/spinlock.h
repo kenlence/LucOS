@@ -1,5 +1,8 @@
-#ifndef __LINUX_SPINLOCK_H
-#define __LINUX_SPINLOCK_H
+#ifndef __LUCOS_SPINLOCK_H
+#define __LUCOS_SPINLOCK_H
+
+#include "preempt.h"
+#include "irqflags.h"
 
 typedef struct { } spinlock_t;
 
@@ -27,4 +30,4 @@ static inline void spin_unlock_irqrestore(spinlock_t *lock, unsigned long flags)
 	preempt_enable();
 }
 
-#endif /* __LINUX_SPINLOCK_H */
+#endif /* __LUCOS_SPINLOCK_H */

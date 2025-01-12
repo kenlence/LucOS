@@ -1,6 +1,6 @@
-#include "../include/sched.h"
-#include "../include/list.h"
-#include "../include/current.h"
+#include "sched.h"
+#include "list.h"
+#include "current.h"
 
 extern struct list_head running_tasks;
 

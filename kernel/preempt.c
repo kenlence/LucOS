@@ -1,5 +1,5 @@
-#include "../include/preempt.h"
-#include "../include/irqflags.h"
+#include "preempt.h"
+#include "irqflags.h"
 
 static int preempt_count = 0;
 

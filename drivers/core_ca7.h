@@ -11,13 +11,12 @@ Copyright © zuozhongkai Co., Ltd. 1998-2019. All rights reserved.
 日志	   : 初版V1.0 2019/1/4 左忠凯创建
 ***************************************************************/
 #include <stdint.h>
-#include <string.h>
 
 
 #define FORCEDINLINE  __attribute__((always_inline))
-#define __ASM            __asm                         	/* GNU C语言内嵌汇编关键字 */ 
-#define __INLINE         inline                      	/* GNU内联关键字 */             
-#define __STATIC_INLINE  static inline					
+#define __ASM            __asm                         	/* GNU C语言内嵌汇编关键字 */
+#define __INLINE         inline                      	/* GNU内联关键字 */
+#define __STATIC_INLINE  static inline
 
 
 #define     __IM     volatile const      /* 只读 */
@@ -32,7 +31,7 @@ Copyright © zuozhongkai Co., Ltd. 1998-2019. All rights reserved.
                     __STRINGIFY(opcode_2)                                         \
                     : : "r" (src) )
 
-/* C语言实现MRC指令 */                    
+/* C语言实现MRC指令 */
 #define __MRC(coproc, opcode_1, CRn, CRm, opcode_2)                               \
   ({                                                                              \
     uint32_t __dst;                                                               \
@@ -43,7 +42,7 @@ Copyright © zuozhongkai Co., Ltd. 1998-2019. All rights reserved.
     __dst;                                                                        \
   })
 
-/* 其他一些C语言内嵌汇编 */  
+/* 其他一些C语言内嵌汇编 */
 __attribute__( ( always_inline ) ) __STATIC_INLINE void __set_APSR(uint32_t apsr)
 {
   __ASM volatile ("MSR apsr, %0" : : "r" (apsr) : "cc");
@@ -83,7 +82,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE void __set_FPEXC(uint32_t fpe
   - CP15
  ******************************************************************************/
 
-/* CPSR寄存器 
+/* CPSR寄存器
  * 参考资料：ARM Cortex-A(armV7)编程手册V4.0.pdf P46
  */
 typedef union
@@ -111,7 +110,7 @@ typedef union
 } CPSR_Type;
 
 
-/* CP15的SCTLR寄存器 
+/* CP15的SCTLR寄存器
  * 参考资料：Cortex-A7 Technical ReferenceManua.pdf P105
  */
 typedef union
@@ -327,7 +326,7 @@ typedef union
 #define DFSR_FS0_Msk                     (0xFUL << DFSR_FS0_Pos)                /*!< DFSR: FS0 Mask */
 
 
-/* CP15的IFSR寄存器 
+/* CP15的IFSR寄存器
  * 参考资料：Cortex-A7 Technical ReferenceManua.pdf P131
  */
 typedef union
@@ -616,7 +615,7 @@ typedef struct
 
 #define GIC_BASE (0x00A00000)
 
-/* 
+/*
  * GIC初始化
  * 为了简单使用GIC的group0
  */
@@ -647,7 +646,7 @@ FORCEDINLINE __STATIC_INLINE void GIC_Init(void)
     gic->C_CTLR = 1UL;
 }
 
-/*  
+/*
  * 使能指定的中断
  */
 FORCEDINLINE __STATIC_INLINE void GIC_EnableIRQ(IRQn_Type IRQn)
@@ -656,7 +655,7 @@ FORCEDINLINE __STATIC_INLINE void GIC_EnableIRQ(IRQn_Type IRQn)
   	gic->D_ISENABLER[((uint32_t)(int32_t)IRQn) >> 5] = (uint32_t)(1UL << (((uint32_t)(int32_t)IRQn) & 0x1FUL));
 }
 
-/*  
+/*
  * 关闭指定的中断
  */
 
@@ -666,8 +665,8 @@ FORCEDINLINE __STATIC_INLINE void GIC_DisableIRQ(IRQn_Type IRQn)
   	gic->D_ICENABLER[((uint32_t)(int32_t)IRQn) >> 5] = (uint32_t)(1UL << (((uint32_t)(int32_t)IRQn) & 0x1FUL));
 }
 
-/* 
- * 返回中断号 
+/*
+ * 返回中断号
  */
 FORCEDINLINE __STATIC_INLINE uint32_t GIC_AcknowledgeIRQ(void)
 {
@@ -675,7 +674,7 @@ FORCEDINLINE __STATIC_INLINE uint32_t GIC_AcknowledgeIRQ(void)
   	return gic->C_IAR & 0x1FFFUL;
 }
 
-/* 
+/*
  * 向EOIR写入发送中断的中断号来释放中断
  */
 FORCEDINLINE __STATIC_INLINE void GIC_DeactivateIRQ(uint32_t value)
@@ -731,4 +730,4 @@ FORCEDINLINE __STATIC_INLINE uint32_t GIC_GetPriority(IRQn_Type IRQn)
 }
 
 
-#endif 
+#endif

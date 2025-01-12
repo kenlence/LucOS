@@ -1,12 +1,13 @@
 /* user code main entry */
-#include "../include/printk.h"
-#include "../include/sched.h"
-#include "../include/current.h"
-#include "../include/kthread.h"
+#include "printk.h"
+#include "sched.h"
+#include "current.h"
+#include "kthread.h"
 
 int user_define_task(void *arg)
 {
     for (;;) {
+        printk("%s\n", __func__);
         schedule();
     }
 }
@@ -17,6 +18,7 @@ int user_default_task(void *arg)
 
     (void)user_define;
     for (;;) {
+        printk("%s\n", __func__);
         schedule();
     }
 }

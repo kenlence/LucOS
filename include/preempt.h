@@ -1,5 +1,5 @@
-#ifndef __LINUX_PREEMPT_H
-#define __LINUX_PREEMPT_H
+#ifndef __LUCOS_PREEMPT_H
+#define __LUCOS_PREEMPT_H
 
 #include "compiler.h"
 

@@ -1,14 +1,12 @@
-#ifndef __LINUX_GFP_H
-#define __LINUX_GFP_H
+#ifndef __LUCOS_GFP_H
+#define __LUCOS_GFP_H
 
+#define GFP_MAX_ORDER	12
 
-void *__get_free_pages(unsigned int order);
+void gfp_init();
+
+void *alloc_pages(unsigned int order);
 
 void free_pages(unsigned long addr, unsigned int order);
-
-#define __get_free_page(gfp_mask) \
-		__get_free_pages((gfp_mask), 0)
-
-#define __free_page(page) __free_pages((page), 0)
 
 #endif

@@ -1,7 +1,7 @@
-#include "../include/sched.h"
-#include "../include/stddef.h"
-#include "../include/list.h"
-#include "../include/current.h"
+#include "sched.h"
+#include "stddef.h"
+#include "list.h"
+#include "current.h"
 
 //在这里，遍历可运行的链表，然后选取一个任务来切换
 //如果没有任何可运行的任务，则切换到init_task

@@ -11,7 +11,8 @@ LIBPATH			:=
 INCDIRS 		:= .    \
                     kernel \
 					drivers \
-					apps
+					apps \
+					include
 
 SRCDIRS			:= .    \
                     arm \

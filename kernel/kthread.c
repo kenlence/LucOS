@@ -1,10 +1,10 @@
-#include "../include/kthread.h"
-#include "../include/kernel.h"
-#include "../include/slab.h"
-#include "../include/gfp.h"
-#include "../include/list.h"
-#include "../include/sched.h"
-#include "../include/current.h"
+#include "kthread.h"
+#include "kernel.h"
+#include "slab.h"
+#include "gfp.h"
+#include "list.h"
+#include "sched.h"
+#include "current.h"
 
 typedef int(*func)(void*);
 
@@ -34,7 +34,7 @@ struct task_struct *kthread_create_on_node(int (*threadfn)(void *data),
 					   ...)
 {
     struct task_struct *tsk = (struct task_struct *)kmalloc(sizeof(struct task_struct));
-    union thread_union *thread= __get_free_pages(1); //get 2^1 pages
+    union thread_union *thread = alloc_pages(1); //get 2^1 pages
 
     tsk->stack = thread;
     tsk->state = TASK_SLEEP;

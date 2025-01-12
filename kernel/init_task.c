@@ -1,5 +1,5 @@
-#include "../include/init_task.h"
-#include "../include/sched.h"
+#include "init_task.h"
+#include "sched.h"
 
 /* Initial task structure */
 struct task_struct init_task = INIT_TASK(init_task);
