@@ -9,6 +9,7 @@
 #include "kthread.h"
 #include "current.h"
 #include "gfp.h"
+#include "types.h"
 
 static void board_init(void) {
 	int_init(); 				/* 初始化中断(一定要最先调用！) */
@@ -19,6 +20,7 @@ static void board_init(void) {
 
 static void kernel_init(void) {
     gfp_init();
+    kmem_cache_init();
 
 /* 1ms, timer is used for scheduler, so start when scheduler start*/
     //epit1_init(0, 66000 * 200);

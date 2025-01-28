@@ -1,4 +1,5 @@
 #include "int.h"
+#include "stddef.h"
 
 /* 中断嵌套计数器 */
 static unsigned int irqNesting;
