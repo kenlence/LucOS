@@ -1,6 +1,7 @@
 #include "epit.h"
 #include "int.h"
 #include "stddef.h"
+#include "printk.h"
 
 static int(*epit1_isr)(void *);
 static void *epit1_arg;
@@ -12,7 +13,6 @@ void epit1_irqhandler(void)
             epit1_isr(epit1_arg);
         }
 	}
-
 
 	EPIT1->SR |= 1<<0; 				/* 清除中断标志位 */
 }

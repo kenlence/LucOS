@@ -2,7 +2,6 @@
 #include "printk.h"
 #include "slab.h"
 #include "sched.h"
-#include "epit.h"
 #include "int.h"
 #include "clk.h"
 #include "imx6ul.h"
@@ -23,7 +22,7 @@ static void kernel_init(void) {
     kmem_cache_init();
 
 /* 1ms, timer is used for scheduler, so start when scheduler start*/
-    //epit1_init(0, 66000 * 200);
+    systick_init();
     return;
 }
 
