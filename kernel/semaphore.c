@@ -17,7 +17,7 @@ static void up(struct semaphore *sem)
 	wake_up_process(waiter->task);
 }
 
-void sema_up(struct semaphore *sem)
+void sem_up(struct semaphore *sem)
 {
     unsigned long flags;
 
@@ -59,7 +59,7 @@ static void down(struct semaphore *sem, unsigned long flags)
     down_common(sem, TASK_SLEEP, MAX_SCHEDULE_TIMEOUT, flags);
 }
 
-void sema_down(struct semaphore *sem)
+void sem_down(struct semaphore *sem)
 {
     unsigned long flags;
 
@@ -71,7 +71,7 @@ void sema_down(struct semaphore *sem)
     spin_unlock_irqrestore(&sem->lock, flags);
 }
 
-int sema_try_down(struct semaphore *sem)
+int sem_try_down(struct semaphore *sem)
 {
     unsigned long flags;
     int count = 0;
@@ -85,7 +85,7 @@ int sema_try_down(struct semaphore *sem)
     return count >= 0;
 }
 
-int sema_down_timeout(struct semaphore *sem, unsigned long timeout)
+int sem_down_timeout(struct semaphore *sem, unsigned long timeout)
 {
     return -1;
 }

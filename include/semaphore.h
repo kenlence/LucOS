@@ -21,14 +21,14 @@ struct semaphore {
 #define DEFINE_SEMAPHORE(name)	\
 	struct semaphore name = __SEMAPHORE_INITIALIZER(name, 1)
 
-static inline void sema_init(struct semaphore *sem, int val)
+static inline void sem_init(struct semaphore *sem, int val)
 {
 	*sem = (struct semaphore) __SEMAPHORE_INITIALIZER(*sem, val);
 }
 
-void sema_down(struct semaphore *sem);
-int sema_try_down(struct semaphore *sem);   // 0: failed, 1: success
-int sema_down_timeout(struct semaphore *sem, unsigned long timeout);  // 暂时不能用
-void sema_up(struct semaphore *sem);
+void sem_down(struct semaphore *sem);
+int sem_try_down(struct semaphore *sem);   // 0: failed, 1: success
+int sem_down_timeout(struct semaphore *sem, unsigned long timeout);  // 暂时不能用
+void sem_up(struct semaphore *sem);
 
 #endif
