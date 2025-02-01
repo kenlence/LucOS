@@ -9,7 +9,10 @@ static inline struct task_struct *pick_next_task(struct task_struct *prev)
 {
 	struct task_struct *tsk;
 
-	tsk = container_of(prev->running_tasks.next, struct task_struct, running_tasks);
+	list_for_each_entry(tsk, &current->tasks, tasks) {
+		if (tsk->state == TASK_RUNNING)
+			break;
+	}
     return tsk;
 }
 

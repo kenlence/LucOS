@@ -10,6 +10,8 @@
 #define TASK_SLEEP				2
 #define TASK_DEAD				64
 
+#define	MAX_SCHEDULE_TIMEOUT	LONG_MAX
+
 #define task_thread_info(task) ((struct thread_info *)(task)->stack)
 #define task_stack_page(task) ((task)->stack)
 
@@ -18,7 +20,6 @@ struct task_struct {
 	volatile long state;
 	void *stack;
 	struct list_head tasks;
-	struct list_head running_tasks;
 	char comm[TASK_COMM_LEN]; //线程的名字
 };
 
@@ -42,11 +43,13 @@ extern struct task_struct init_task;
 //Return: 1 if the process was woken up, 0 if it was already running.
 int wake_up_process(struct task_struct *tsk);
 
-/* 不带内存屏障的 */
-#define __set_current_state(state_value)		\
-	do { current->state = (state_value); } while (0)
+#define __set_task_state(tsk, state_value)		\
+	do { (tsk)->state = (state_value); } while (0)
 
-/* 带内存屏障的，还没实现 */
-#define set_current_state(state_value)
+#define set_task_state(tsk, state_value) __set_task_state(tsk, state_value)
+
+#define __set_current_state(state_value) __set_task_state(current, state_value)
+
+#define set_current_state(state_value) __set_current_state(state_value)
 
 #endif
