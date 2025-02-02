@@ -37,4 +37,10 @@ void del_timer(struct timer *timer);
 void mod_timer(struct timer *timer, uint64_t expires);
 uint64_t get_systick(void);
 
+void msleep(uint32_t ms);
+#define sleep(x) msleep(x * 1000)
+uint32_t schedule_timeout(uint32_t timeout);
+
+#define jiffies (get_systick())
+
 #endif

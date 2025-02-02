@@ -3,6 +3,8 @@
 #include "epit.h"
 #include "printk.h"
 #include "types.h"
+#include <sched.h>
+#include "current.h"
 
 // timer支持的最大精度为毫秒级
 static LIST_HEAD(timer_list_10ms);
@@ -130,4 +132,31 @@ uint64_t get_systick(void)
     uint64_t ret = systick;
     spin_unlock_irqrestore(&lock, flags);
     return ret;
+}
+
+static void process_timeout(struct timer *timer)
+{
+    wake_up_process((struct task_struct *)timer->data);
+}
+
+uint32_t schedule_timeout(uint32_t timeout)
+{
+    uint64_t expire = get_systick() + timeout;
+    DEFINE_TIMER(timer, process_timeout, current);
+
+    if (timeout == MAX_SCHEDULE_TIMEOUT) {
+        schedule();
+        return timeout < 0 ? 0 : timeout;
+    }
+
+    mod_timer(&timer, expire);
+    schedule();
+    timeout = expire - get_systick();
+    return timeout < 0 ? 0 : timeout;
+}
+
+void msleep(uint32_t ms)
+{
+    __set_current_state(TASK_SLEEP);
+    schedule_timeout(ms);
 }
