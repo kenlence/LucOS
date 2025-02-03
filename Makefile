@@ -42,11 +42,11 @@ $(TARGET).elf : $(OBJS)
 	$(V) $(LD) -Tlucos.lds -o $(TARGET).elf $^
 
 $(SOBJS) : obj/%.o : %.S
-	$(V) printf "[CC] %-30s -> %-30s\n" $< $@
+	$(V) echo [CC] $<
 	$(V) $(CC) -Wall -nostdlib -fno-builtin -c -g -std=gnu99 -O0 $(INCLUDE) -o $@ $<
 
 $(COBJS) : obj/%.o : %.c
-	$(V) printf "[CC] %-30s -> %-30s\n" $< $@
+	$(V) echo [CC] $<
 	$(V) $(CC) -Wall -nostdlib -fno-builtin -c -g -std=gnu99 -O0 $(INCLUDE) -o $@ $<
 
 qemu: $(TARGET).elf
