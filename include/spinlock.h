@@ -6,7 +6,11 @@
 
 typedef struct { } spinlock_t;
 
-#define spin_lock_init(_lock)
+#define __SPIN_LOCK_UNLOCKED(lock) { }
+
+#define DEFINE_SPINLOCK(x)	spinlock_t x = __SPIN_LOCK_UNLOCKED(x)
+
+#define spin_lock_init(_lock) __SPIN_LOCK_UNLOCKED(lock)
 
 static inline void spin_lock(spinlock_t *lock)
 {

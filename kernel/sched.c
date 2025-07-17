@@ -8,12 +8,11 @@
 static inline struct task_struct *pick_next_task(struct task_struct *prev)
 {
 	struct task_struct *tsk;
-	list_for_each_entry(tsk, &init_task.running_tasks, running_tasks) {
-		if (tsk != current) {
-			break;
-		}
-	}
 
+	list_for_each_entry(tsk, &current->tasks, tasks) {
+		if (tsk->state == TASK_RUNNING)
+			break;
+	}
     return tsk;
 }
 
@@ -21,7 +20,7 @@ extern struct task_struct *__switch_to(struct task_struct *, struct thread_info 
 
 #define switch_to(prev,next,last)					\
 do {									\
-	last = __switch_to(prev,task_thread_info(prev), task_thread_info(next));	\
+	last = __switch_to(prev, task_thread_info(prev), task_thread_info(next));	\
 } while (0)
 
 static void context_switch(struct task_struct *prev, struct task_struct *next)
@@ -30,7 +29,6 @@ static void context_switch(struct task_struct *prev, struct task_struct *next)
 	switch_to(prev, next, prev);
     __asm__ __volatile__("":::"memory");
 }
-
 
 static void __schedule(void)
 {

@@ -1,6 +1,8 @@
 #ifndef __LUCOS_GFP_H
 #define __LUCOS_GFP_H
 
+#include "page.h"
+
 #define GFP_MAX_ORDER	12
 
 void gfp_init();

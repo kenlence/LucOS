@@ -1,6 +1,5 @@
 #include "gfp.h"
 #include "list.h"
-#include "page.h"
 #include "spinlock.h"
 #include "string.h"
 #include "printk.h"
@@ -112,6 +111,7 @@ static void do_free_pages(unsigned long addr, unsigned int order)
 
     buddy = get_buddy(addr, order);
 
+    // TODO, 为了减少遍历链表带来的开销，可以在插入链表时排序
     list_for_each_entry_safe(page, n, &page_orders[order], list) {
         if ((unsigned long)page == buddy) {
             list_del(&page->list);

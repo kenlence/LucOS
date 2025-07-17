@@ -3,12 +3,28 @@
 #include "sched.h"
 #include "current.h"
 #include "kthread.h"
+#include "slab.h"
+#include "mutex.h"
+#include <sched.h>
+#include <stdint.h>
+#include "timer.h"
+
+DEFINE_MUTEX(mutex);
+static int count = 0;
 
 int user_define_task(void *arg)
 {
     for (;;) {
-        printk("%s\n", __func__);
         schedule();
+        if (mutex_trylock(&mutex) == 0) {
+            continue;
+        }
+
+        if (count > 0) {
+            count--;
+            printk("count: %d\n", count);
+        }
+        mutex_unlock(&mutex);
     }
 }
 
@@ -18,7 +34,9 @@ int user_default_task(void *arg)
 
     (void)user_define;
     for (;;) {
-        printk("%s\n", __func__);
-        schedule();
+        sleep(1);
+        mutex_lock(&mutex);
+        count++;
+        mutex_unlock(&mutex);
     }
 }
