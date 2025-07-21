@@ -41,7 +41,7 @@ void *kmalloc(unsigned int size)
     unsigned int page;
 
     size++;
-    if (size < PAGE_SIZE) {
+    if (size < 1 << (KMALLOC_CACHE_COUNT + 3)) {
         mem = (unsigned int *)slab_malloc(size);
     } else {
         page = size / PAGE_SIZE;
@@ -58,11 +58,11 @@ void kfree(const void *block)
 {
     unsigned int *mem = (unsigned int *)block - 1;
 
-    if (*mem < PAGE_SIZE) {
+    if (*mem < 1 << (KMALLOC_CACHE_COUNT + 3)) {
         return slab_free((void *)mem, *mem);
     }
 
-    return free_pages((unsigned long)block, 0);
+    return free_pages((unsigned long)mem, 0);
 }
 
 void *kzalloc(unsigned int size)
